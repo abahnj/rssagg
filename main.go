@@ -47,6 +47,7 @@ func main() {
 		fmt.Println("  feeds - List all feeds")
 		fmt.Println("  addfeed <name> <url> - Add a new feed")
 		fmt.Println("  follow <url> - Follow an existing feed")
+		fmt.Println("  unfollow <url> - Unfollow a feed")
 		fmt.Println("  following - List feeds you're following")
 		fmt.Println("  agg - Aggregate and show feed content")
 		os.Exit(0)

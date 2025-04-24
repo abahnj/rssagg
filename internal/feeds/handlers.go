@@ -141,6 +141,34 @@ func HandlerFollowFeed(s *cli.State, cmd cli.Command, user database.User) error 
 	return nil
 }
 
+// HandlerUnfollowFeed handles the unfollow command to unfollow a feed
+func HandlerUnfollowFeed(s *cli.State, cmd cli.Command, user database.User) error {
+	if len(cmd.Args) < 1 {
+		return errors.New("feed URL is required")
+	}
+
+	ctx := context.Background()
+	feedURL := cmd.Args[0]
+	
+	service := NewService(*s.Db)
+	
+	// First check if the feed exists
+	_, err := service.DB.GetFeedByURL(ctx, feedURL)
+	if err != nil {
+		return fmt.Errorf("feed with URL %s not found: %w", feedURL, err)
+	}
+	
+	// Unfollow the feed
+	err = service.UnfollowFeed(ctx, feedURL, user.ID)
+	if err != nil {
+		return err
+	}
+	
+	fmt.Printf("You have unfollowed feed with URL: %s\n", feedURL)
+	
+	return nil
+}
+
 // HandlerListFollowing handles the following command to list feeds the user follows
 func HandlerListFollowing(s *cli.State, cmd cli.Command, user database.User) error {
 	ctx := context.Background()

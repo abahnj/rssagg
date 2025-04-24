@@ -160,3 +160,18 @@ func (s *Service) GetFollowedFeeds(ctx context.Context, userID uuid.UUID) ([]dat
 	}
 	return follows, nil
 }
+
+// UnfollowFeed removes a feed follow for a user
+func (s *Service) UnfollowFeed(ctx context.Context, feedURL string, userID uuid.UUID) error {
+	params := database.DeleteFeedFollowParams{
+		UserID: userID,
+		Url:    feedURL,
+	}
+	
+	err := s.DB.DeleteFeedFollow(ctx, params)
+	if err != nil {
+		return fmt.Errorf("failed to unfollow feed: %w", err)
+	}
+	
+	return nil
+}

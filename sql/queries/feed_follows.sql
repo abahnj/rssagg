@@ -14,6 +14,12 @@ RETURNING
     (SELECT name FROM users WHERE id = feed_follows.user_id) AS user_name,
     (SELECT name FROM feeds WHERE id = feed_follows.feed_id) AS feed_name;
 
+-- name: DeleteFeedFollow :exec
+DELETE FROM feed_follows
+WHERE feed_follows.user_id = $1 AND feed_follows.feed_id = (
+    SELECT id FROM feeds WHERE url = $2
+);
+
 -- name: GetFeedFollowsForUser :many
 SELECT 
     ff.id,
