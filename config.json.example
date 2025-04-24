@@ -1,0 +1,4 @@
+{
+  "db_url": "postgres://username:password@localhost:5432/rssagg",
+  "current_user_name": ""
+}

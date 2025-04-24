@@ -41,15 +41,18 @@ go install github.com/abahnj/rssagg@latest
 
 ## Configuration
 
-The application requires a database connection. Create a `config.json` file in the project root directory:
+The application requires a database connection. Create a `config.json` file in the project root directory (you can copy from the provided `config.json.example`):
 
 Example configuration:
 
 ```json
 {
-  "db_url": "postgres://username:password@localhost:5432/rssagg"
+  "db_url": "postgres://username:password@localhost:5432/rssagg",
+  "current_user_name": ""
 }
 ```
+
+Note: Both `config.json` and `.gatorconfig.json` formats are supported, but `config.json` in the project root is recommended.
 
 ## Database Setup
 

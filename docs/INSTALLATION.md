@@ -117,20 +117,23 @@ psql -U postgres -c "CREATE DATABASE rssagg"
 
 ## Configuration
 
-Create a configuration file named `config.json` in the project root directory:
+Create a configuration file named `config.json` in the project root directory. You can copy from the example file:
 
 ```bash
-# Create the config file
-touch config.json
+# Copy the example config file
+cp config.json.example config.json
 ```
 
 Edit the configuration file to include your database connection:
 
 ```json
 {
-  "db_url": "postgres://yourusername:yourpassword@localhost:5432/rssagg"
+  "db_url": "postgres://yourusername:yourpassword@localhost:5432/rssagg",
+  "current_user_name": ""
 }
 ```
+
+Note: The `.gatorconfig.json` format is also supported (copy from `.gatorconfig.json.example`), but `config.json` in the project root is the recommended approach.
 
 Replace `yourusername` and `yourpassword` with your PostgreSQL credentials.
 
