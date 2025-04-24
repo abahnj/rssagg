@@ -42,6 +42,7 @@ func registerCommands(commands *cli.Commands) {
 	commands.Register("users", handlerListUsers)
 	commands.Register("agg", handlerAggregator)
 	commands.Register("addfeed", handlerAddFeed)
+	commands.Register("feeds", handlerListFeeds)
 }
 
 // handlerLogin handles the login command
@@ -251,6 +252,35 @@ func handlerAddFeed(s *cli.State, cmd cli.Command) error {
 	fmt.Printf("  Name: %s\n", feed.Name)
 	fmt.Printf("  URL: %s\n", feed.Url)
 	fmt.Printf("  Created: %s\n", feed.CreatedAt.Time.Format("2006-01-02 15:04:05"))
+	
+	return nil
+}
+
+// handlerListFeeds handles the feeds command to list all feeds
+func handlerListFeeds(s *cli.State, cmd cli.Command) error {
+	ctx := context.Background()
+	
+	// Fetch all feeds with user information
+	feeds, err := s.Db.GetFeedsWithUsers(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to get feeds: %w", err)
+	}
+	
+	if len(feeds) == 0 {
+		fmt.Println("No feeds found")
+		return nil
+	}
+	
+	fmt.Printf("Found %d feeds:\n\n", len(feeds))
+	
+	// Display each feed with user information
+	for i, feed := range feeds {
+		fmt.Printf("%d. %s\n", i+1, feed.Name)
+		fmt.Printf("   URL: %s\n", feed.Url)
+		fmt.Printf("   Added by: %s\n", feed.UserName)
+		fmt.Printf("   Added on: %s\n", feed.CreatedAt.Time.Format("2006-01-02 15:04:05"))
+		fmt.Println()
+	}
 	
 	return nil
 }
