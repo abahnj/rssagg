@@ -41,6 +41,7 @@ func registerCommands(commands *cli.Commands) {
 	commands.Register("reset", handlerDeleteAllUsers)
 	commands.Register("users", handlerListUsers)
 	commands.Register("agg", handlerAggregator)
+	commands.Register("addfeed", handlerAddFeed)
 }
 
 // handlerLogin handles the login command
@@ -205,6 +206,51 @@ func handlerAggregator(s *cli.State, cmd cli.Command) error {
 		fmt.Printf("Published: %s\n", item.PubDate)
 		fmt.Printf("Description: %s\n\n", item.Description)
 	}
+	
+	return nil
+}
+
+// handlerAddFeed handles the addfeed command to add a new RSS feed
+func handlerAddFeed(s *cli.State, cmd cli.Command) error {
+	if len(cmd.Args) < 2 {
+		return errors.New("both feed name and URL are required")
+	}
+
+	// Get the current user
+	if s.Config == nil || s.Config.CurrentUserName == "" {
+		return errors.New("you must be logged in to add a feed")
+	}
+
+	ctx := context.Background()
+	
+	// Get the current user from the database
+	user, err := s.Db.GetUserByName(ctx, s.Config.CurrentUserName)
+	if err != nil {
+		return fmt.Errorf("failed to get current user: %w", err)
+	}
+	
+	feedName := cmd.Args[0]
+	feedURL := cmd.Args[1]
+	
+	// Create a new feed record
+	createFeedParams := database.CreateFeedParams{
+		ID:     uuid.New(),
+		Name:   feedName,
+		Url:    feedURL,
+		UserID: user.ID,
+	}
+	
+	feed, err := s.Db.CreateFeed(ctx, createFeedParams)
+	if err != nil {
+		return fmt.Errorf("failed to create feed: %w", err)
+	}
+	
+	// Print out the new feed details
+	fmt.Printf("Feed added successfully:\n")
+	fmt.Printf("  ID: %s\n", feed.ID)
+	fmt.Printf("  Name: %s\n", feed.Name)
+	fmt.Printf("  URL: %s\n", feed.Url)
+	fmt.Printf("  Created: %s\n", feed.CreatedAt.Time.Format("2006-01-02 15:04:05"))
 	
 	return nil
 }
