@@ -41,10 +41,10 @@ func registerCommands(commands *cli.Commands) {
 	commands.Register("reset", handlerDeleteAllUsers)
 	commands.Register("users", handlerListUsers)
 	commands.Register("agg", handlerAggregator)
-	commands.Register("addfeed", handlerAddFeed)
+	commands.Register("addfeed", cli.MiddlewareLoggedIn(handlerAddFeed))
 	commands.Register("feeds", handlerListFeeds)
-	commands.Register("follow", handlerFollowFeed)
-	commands.Register("following", handlerListFollowing)
+	commands.Register("follow", cli.MiddlewareLoggedIn(handlerFollowFeed))
+	commands.Register("following", cli.MiddlewareLoggedIn(handlerListFollowing))
 }
 
 // handlerLogin handles the login command
@@ -214,24 +214,12 @@ func handlerAggregator(s *cli.State, cmd cli.Command) error {
 }
 
 // handlerAddFeed handles the addfeed command to add a new RSS feed
-func handlerAddFeed(s *cli.State, cmd cli.Command) error {
+func handlerAddFeed(s *cli.State, cmd cli.Command, user database.User) error {
 	if len(cmd.Args) < 2 {
 		return errors.New("both feed name and URL are required")
 	}
 
-	// Get the current user
-	if s.Config == nil || s.Config.CurrentUserName == "" {
-		return errors.New("you must be logged in to add a feed")
-	}
-
 	ctx := context.Background()
-	
-	// Get the current user from the database
-	user, err := s.Db.GetUserByName(ctx, s.Config.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to get current user: %w", err)
-	}
-	
 	feedName := cmd.Args[0]
 	feedURL := cmd.Args[1]
 	
@@ -312,24 +300,12 @@ func handlerListFeeds(s *cli.State, cmd cli.Command) error {
 }
 
 // handlerFollowFeed handles the follow command to follow an existing feed
-func handlerFollowFeed(s *cli.State, cmd cli.Command) error {
+func handlerFollowFeed(s *cli.State, cmd cli.Command, user database.User) error {
 	if len(cmd.Args) < 1 {
 		return errors.New("feed URL is required")
 	}
 
-	// Get the current user
-	if s.Config == nil || s.Config.CurrentUserName == "" {
-		return errors.New("you must be logged in to follow a feed")
-	}
-
 	ctx := context.Background()
-	
-	// Get the current user from the database
-	user, err := s.Db.GetUserByName(ctx, s.Config.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to get current user: %w", err)
-	}
-	
 	feedURL := cmd.Args[0]
 	
 	// Get the feed by URL
@@ -359,19 +335,8 @@ func handlerFollowFeed(s *cli.State, cmd cli.Command) error {
 }
 
 // handlerListFollowing handles the following command to list feeds the user follows
-func handlerListFollowing(s *cli.State, cmd cli.Command) error {
-	// Get the current user
-	if s.Config == nil || s.Config.CurrentUserName == "" {
-		return errors.New("you must be logged in to see your followed feeds")
-	}
-
+func handlerListFollowing(s *cli.State, cmd cli.Command, user database.User) error {
 	ctx := context.Background()
-	
-	// Get the current user from the database
-	user, err := s.Db.GetUserByName(ctx, s.Config.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to get current user: %w", err)
-	}
 	
 	// Get the feeds user is following
 	feedFollows, err := s.Db.GetFeedFollowsForUser(ctx, user.ID)
