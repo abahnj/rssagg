@@ -4,6 +4,7 @@ import (
 	"github.com/abahnj/rssagg/internal/cli"
 	"github.com/abahnj/rssagg/internal/feeds"
 	"github.com/abahnj/rssagg/internal/middleware"
+	"github.com/abahnj/rssagg/internal/posts"
 	"github.com/abahnj/rssagg/internal/users"
 )
 
@@ -24,5 +25,5 @@ func registerCommands(commands *cli.Commands) {
 	commands.Register("follow", middleware.MiddlewareLoggedIn(feeds.HandlerFollowFeed))
 	commands.Register("following", middleware.MiddlewareLoggedIn(feeds.HandlerListFollowing))
 	commands.Register("unfollow", middleware.MiddlewareLoggedIn(feeds.HandlerUnfollowFeed))
-	commands.Register("browse", middleware.MiddlewareLoggedIn(feeds.HandlerBrowse))
+	commands.Register("browse", middleware.MiddlewareLoggedIn(posts.HandlerBrowse))
 }

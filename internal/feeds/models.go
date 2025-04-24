@@ -10,26 +10,12 @@ import (
 	"net/http"
 
 	"github.com/abahnj/rssagg/internal/database"
+	"github.com/abahnj/rssagg/internal/posts"
+	"github.com/abahnj/rssagg/internal/types"
 	"github.com/google/uuid"
 )
 
-// RSSFeed represents an RSS feed with its channels and items
-type RSSFeed struct {
-	Channel struct {
-		Title       string    `xml:"title"`
-		Link        string    `xml:"link"`
-		Description string    `xml:"description"`
-		Item        []RSSItem `xml:"item"`
-	} `xml:"channel"`
-}
-
-// RSSItem represents a single item in an RSS feed
-type RSSItem struct {
-	Title       string `xml:"title"`
-	Link        string `xml:"link"`
-	Description string `xml:"description"`
-	PubDate     string `xml:"pubDate"`
-}
+// Using common RSS types from the types package
 
 // Service handles feed operations
 type Service struct {
@@ -44,7 +30,7 @@ func NewService(db database.Queries) *Service {
 }
 
 // FetchFeed retrieves and parses an RSS feed from the given URL
-func (s *Service) FetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
+func (s *Service) FetchFeed(ctx context.Context, feedURL string) (*types.RSSFeed, error) {
 	// Create a new request with context
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, feedURL, nil)
 	if err != nil {
@@ -74,7 +60,7 @@ func (s *Service) FetchFeed(ctx context.Context, feedURL string) (*RSSFeed, erro
 	}
 
 	// Parse the XML
-	var feed RSSFeed
+	var feed types.RSSFeed
 	if err := xml.Unmarshal(body, &feed); err != nil {
 		return nil, fmt.Errorf("error parsing XML: %w", err)
 	}
@@ -196,6 +182,9 @@ func (s *Service) MarkFeedFetched(ctx context.Context, feedID uuid.UUID) error {
 
 // ScrapeFeed fetches and processes a single feed
 func (s *Service) ScrapeFeed(ctx context.Context) error {
+	// Import posts service
+	postsService := posts.NewService(s.DB)
+	
 	// Get the next feed to fetch
 	feed, err := s.GetNextFeedToFetch(ctx)
 	if err != nil {
@@ -216,7 +205,7 @@ func (s *Service) ScrapeFeed(ctx context.Context) error {
 	
 	// Store each post in the database
 	for _, item := range rssFeed.Channel.Item {
-		err := s.CreatePost(ctx, feed, item)
+		err := postsService.CreatePost(ctx, feed, item)
 		if err != nil {
 			// Just log errors but continue processing other items
 			fmt.Printf("Error saving post %s: %v\n", item.Title, err)

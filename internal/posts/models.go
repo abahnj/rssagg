@@ -1,4 +1,4 @@
-package feeds
+package posts
 
 import (
 	"context"
@@ -8,12 +8,25 @@ import (
 	"time"
 
 	"github.com/abahnj/rssagg/internal/database"
+	"github.com/abahnj/rssagg/internal/types"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+// Service handles post operations
+type Service struct {
+	DB database.Queries
+}
+
+// NewService creates a new posts service
+func NewService(db database.Queries) *Service {
+	return &Service{
+		DB: db,
+	}
+}
+
 // CreatePost adds a new post to the database
-func (s *Service) CreatePost(ctx context.Context, feed database.Feed, item RSSItem) error {
+func (s *Service) CreatePost(ctx context.Context, feed database.Feed, item types.RSSItem) error {
 	// Skip items with missing title or URL
 	if item.Title == "" || item.Link == "" {
 		return errors.New("post missing required title or URL")
