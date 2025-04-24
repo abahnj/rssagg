@@ -4,42 +4,38 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/abahnj/rssagg/internal/cli"
 	"github.com/abahnj/rssagg/internal/database"
 )
 
-// HandlerAggregator handles the agg command to fetch and display a feed
+// HandlerAggregator handles the agg command to fetch and display feeds
 func HandlerAggregator(s *cli.State, cmd cli.Command) error {
-	ctx := context.Background()
+	if len(cmd.Args) < 1 {
+		return errors.New("time between requests is required (e.g. 10s, 1m)")
+	}
 	
-	// URL of the feed to fetch
-	feedURL := "https://www.wagslane.dev/index.xml"
+	// Parse the time between requests
+	timeBetweenRequests, err := time.ParseDuration(cmd.Args[0])
+	if err != nil {
+		return fmt.Errorf("invalid time format: %w", err)
+	}
 	
 	service := NewService(*s.Db)
+	ctx := context.Background()
 	
-	// Fetch the feed
-	feed, err := service.FetchFeed(ctx, feedURL)
-	if err != nil {
-		return fmt.Errorf("failed to fetch feed: %w", err)
+	fmt.Printf("Collecting feeds every %s\n", timeBetweenRequests)
+	
+	// Create a ticker to run the scrape function periodically
+	ticker := time.NewTicker(timeBetweenRequests)
+	
+	// Run immediately and then on each tick
+	for ; ; <-ticker.C {
+		if err := service.ScrapeFeed(ctx); err != nil {
+			fmt.Printf("Error scraping feed: %v\n", err)
+		}
 	}
-	
-	// Print the feed details
-	fmt.Printf("Feed: %s\n", feed.Channel.Title)
-	fmt.Printf("Link: %s\n", feed.Channel.Link)
-	fmt.Printf("Description: %s\n", feed.Channel.Description)
-	fmt.Printf("Items: %d\n\n", len(feed.Channel.Item))
-	
-	// Print each item
-	for i, item := range feed.Channel.Item {
-		fmt.Printf("--- Item %d ---\n", i+1)
-		fmt.Printf("Title: %s\n", item.Title)
-		fmt.Printf("Link: %s\n", item.Link)
-		fmt.Printf("Published: %s\n", item.PubDate)
-		fmt.Printf("Description: %s\n\n", item.Description)
-	}
-	
-	return nil
 }
 
 // HandlerAddFeed handles the addfeed command to add a new RSS feed

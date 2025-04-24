@@ -175,3 +175,57 @@ func (s *Service) UnfollowFeed(ctx context.Context, feedURL string, userID uuid.
 	
 	return nil
 }
+
+// GetNextFeedToFetch gets the next feed that should be fetched
+func (s *Service) GetNextFeedToFetch(ctx context.Context) (database.Feed, error) {
+	feed, err := s.DB.GetNextFeedToFetch(ctx)
+	if err != nil {
+		return database.Feed{}, fmt.Errorf("failed to get next feed to fetch: %w", err)
+	}
+	return feed, nil
+}
+
+// MarkFeedFetched updates the last_fetched_at timestamp for a feed
+func (s *Service) MarkFeedFetched(ctx context.Context, feedID uuid.UUID) error {
+	err := s.DB.MarkFeedFetched(ctx, feedID)
+	if err != nil {
+		return fmt.Errorf("failed to mark feed as fetched: %w", err)
+	}
+	return nil
+}
+
+// ScrapeFeeds fetches and processes a single feed
+func (s *Service) ScrapeFeed(ctx context.Context) error {
+	// Get the next feed to fetch
+	feed, err := s.GetNextFeedToFetch(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to get next feed to fetch: %w", err)
+	}
+	
+	// Log which feed we're about to fetch
+	fmt.Printf("\nFetching feed: %s (%s)\n", feed.Name, feed.Url)
+	
+	// Fetch the feed content
+	rssFeed, err := s.FetchFeed(ctx, feed.Url)
+	if err != nil {
+		return fmt.Errorf("failed to fetch feed content: %w", err)
+	}
+	
+	// Process the feed items
+	fmt.Printf("Found %d posts in feed\n\n", len(rssFeed.Channel.Item))
+	
+	for _, item := range rssFeed.Channel.Item {
+		fmt.Printf("- %s\n  %s\n  Published: %s\n\n", 
+			item.Title, 
+			item.Link, 
+			item.PubDate)
+	}
+	
+	// Mark the feed as fetched
+	err = s.MarkFeedFetched(ctx, feed.ID)
+	if err != nil {
+		return fmt.Errorf("failed to mark feed as fetched: %w", err)
+	}
+	
+	return nil
+}
