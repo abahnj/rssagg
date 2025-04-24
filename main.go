@@ -39,9 +39,17 @@ func main() {
 	// Process command line arguments
 	args := os.Args
 	if len(args) < 2 {
-		fmt.Println("Error: command name is required")
-		fmt.Println("Usage: rssagg <command> [arguments]")
-		os.Exit(1)
+		fmt.Println("Available commands:")
+		fmt.Println("  login <username>  - Log in as a user")
+		fmt.Println("  register <username> - Register a new user")
+		fmt.Println("  users - List all users")
+		fmt.Println("  reset - Delete all users")
+		fmt.Println("  feeds - List all feeds")
+		fmt.Println("  addfeed <name> <url> - Add a new feed")
+		fmt.Println("  follow <url> - Follow an existing feed")
+		fmt.Println("  following - List feeds you're following")
+		fmt.Println("  agg - Aggregate and show feed content")
+		os.Exit(0)
 	}
 
 	// Parse command
