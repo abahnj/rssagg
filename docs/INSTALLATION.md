@@ -107,25 +107,68 @@ move rssagg %GOPATH%\bin\  # Windows
 
 ### Creating the Database
 
-You can create the database using one of these methods:
+You'll need to create a PostgreSQL database for the application. There are multiple ways to do this depending on your environment and preferences:
+
+#### Using Command Line Tools
+
+PostgreSQL provides several command-line utilities that are installed with PostgreSQL:
 
 ```bash
-# Method 1: Using createdb (Unix/macOS)
+# Method 1: Using createdb utility
+# ------------------------------------------------------------
+# This is a specialized PostgreSQL command-line tool for creating databases
+# Requires: PostgreSQL client tools installed and in your PATH
 createdb rssagg
 
-# Method 2: Using psql (all platforms)
-# Without credentials (if using peer authentication)
+# If you need to specify a user:
+createdb -U postgres rssagg
+
+# If you need to specify a host:
+createdb -h localhost -U postgres rssagg
+
+
+# Method 2: Using psql (PostgreSQL's interactive terminal)
+# ------------------------------------------------------------
+# This approach works on all platforms where PostgreSQL is installed
+# Without credentials (if using peer authentication on Unix/macOS):
 psql -c "CREATE DATABASE rssagg;"
 
-# With credentials
+# With credentials (typical on Windows or remote servers):
 psql -U postgres -c "CREATE DATABASE rssagg;"
 
-# Method 3: Using pgAdmin or another GUI tool
-# 1. Open pgAdmin
-# 2. Connect to your PostgreSQL server
-# 3. Right-click on "Databases" and select "Create" > "Database"
-# 4. Enter "rssagg" as the database name and save
+# Full format with host and port specification:
+psql -h localhost -p 5432 -U postgres -c "CREATE DATABASE rssagg;"
 ```
+
+#### Where to Get PostgreSQL Tools
+
+- These tools are not part of our application but come with a PostgreSQL installation
+- If commands aren't found, you may need to:
+  - On Windows: Add PostgreSQL's `bin` directory to your PATH (typically `C:\Program Files\PostgreSQL\{version}\bin`)
+  - On macOS: Install PostgreSQL via Homebrew: `brew install postgresql`
+  - On Linux: Install PostgreSQL client tools: `sudo apt install postgresql-client`
+
+#### Using Graphical Tools
+
+If you prefer a GUI approach:
+
+1. **pgAdmin (cross-platform)**
+   - Download from [pgadmin.org](https://www.pgadmin.org/download/)
+   - Connect to your PostgreSQL server
+   - Right-click on "Databases" in the browser tree
+   - Select "Create" > "Database"
+   - Enter "rssagg" as the database name and click "Save"
+
+2. **DBeaver (cross-platform)**
+   - Download from [dbeaver.io](https://dbeaver.io/download/)
+   - Connect to your PostgreSQL server
+   - Right-click on "Databases" and select "Create New Database"
+   - Enter "rssagg" as the database name
+   
+3. **DataGrip (JetBrains product)**
+   - Right-click on your PostgreSQL connection
+   - Select "New" > "Database"
+   - Enter "rssagg" as the name
 
 ### Setting Up the Schema
 

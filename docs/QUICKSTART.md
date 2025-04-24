@@ -27,14 +27,22 @@ This guide will help you get started with RSS Aggregator CLI (rssagg) in minutes
 
 2. **Set Up Database**
 
+   You'll need to create a PostgreSQL database first. Choose the method that works for your system:
+
    ```bash
-   # Create the database (choose one method)
-   createdb rssagg                          # Unix/macOS
-   # OR
-   psql -c "CREATE DATABASE rssagg;"        # All platforms
-   # OR
-   psql -U postgres -c "CREATE DATABASE rssagg;"  # Windows/with credentials
+   # OPTION A: Using createdb (PostgreSQL utility command)
+   createdb rssagg                          
+   
+   # OPTION B: Using psql terminal
+   psql -c "CREATE DATABASE rssagg;"        
+   
+   # OPTION C: With explicit user credentials
+   psql -U postgres -c "CREATE DATABASE rssagg;"
    ```
+
+   > **Note:** `createdb` and `psql` are PostgreSQL utilities that come with a PostgreSQL installation.
+   > They are not part of this application. If these commands aren't found, make sure PostgreSQL
+   > is properly installed and its bin directory is in your PATH.
 
    **Option A: Manual SQL Execution**
    ```bash

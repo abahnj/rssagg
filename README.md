@@ -55,19 +55,37 @@ Example configuration:
 
 ## Database Setup
 
-First, create a new PostgreSQL database:
+First, you'll need to create a new PostgreSQL database. There are several ways to do this depending on your setup:
+
+### Creating the Database
 
 ```bash
-# Option 1: Using createdb (Unix/macOS)
+# Option 1: Using createdb (a PostgreSQL utility command)
+# This command is available if you have PostgreSQL command-line tools installed
+# Typically used on Unix/macOS systems
 createdb rssagg
 
-# Option 2: Using psql (works on all platforms)
+# Option 2: Using psql (the PostgreSQL interactive terminal)
+# This works on all platforms where PostgreSQL is installed
 psql -c "CREATE DATABASE rssagg;"
 
-# Option 3: Using pgAdmin or another GUI tool
-# Right-click on "Databases" and select "Create" > "Database"
-# Enter "rssagg" as the database name
+# With explicit user (useful on Windows or when using non-default users)
+psql -U postgres -c "CREATE DATABASE rssagg;"
 ```
+
+**Note about PostgreSQL tools:**
+- `createdb` and `psql` are PostgreSQL client utilities that come with PostgreSQL installation
+- These are not part of our application but external tools you need to use
+- On Windows, you might need to add the PostgreSQL bin directory to your PATH to use these commands
+- For more information, see the [PostgreSQL documentation](https://www.postgresql.org/docs/current/app-createdb.html)
+
+**Alternative: Using pgAdmin (Graphical Interface)**
+1. Open pgAdmin (install from [pgadmin.org](https://www.pgadmin.org/download/) if needed)
+2. Connect to your PostgreSQL server
+3. Right-click on "Databases" in the browser tree
+4. Select "Create" > "Database"
+5. Enter "rssagg" as the database name
+6. Click "Save"
 
 ### Option 1: Manual SQL Execution
 
