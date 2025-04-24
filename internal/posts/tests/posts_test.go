@@ -2,9 +2,6 @@ package tests
 
 import (
 	"testing"
-	"time"
-
-	"github.com/abahnj/rssagg/internal/posts"
 )
 
 func TestParseRSSTime(t *testing.T) {

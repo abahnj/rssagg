@@ -205,11 +205,12 @@ func (s *Service) ScrapeFeed(ctx context.Context) error {
 	
 	// Store each post in the database
 	for _, item := range rssFeed.Channel.Item {
-		err := postsService.CreatePost(ctx, feed, item)
-		if err != nil {
+		result := postsService.CreatePost(ctx, feed, item)
+		if result.Err != nil {
 			// Just log errors but continue processing other items
-			fmt.Printf("Error saving post %s: %v\n", item.Title, err)
-		} else {
+			fmt.Printf("Error saving post %s: %v\n", item.Title, result.Err)
+		} else if result.Created {
+			// Only print "Saved" for newly created posts
 			fmt.Printf("Saved: %s\n", item.Title)
 		}
 	}

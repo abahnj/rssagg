@@ -6,6 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/abahnj/rssagg/internal/feeds"
+	"github.com/abahnj/rssagg/internal/database"
 )
 
 func TestFetchFeed(t *testing.T) {
@@ -37,9 +39,10 @@ func TestFetchFeed(t *testing.T) {
 		}))
 		defer server.Close()
 		
-		// Fetch the feed
+		// Fetch the feed using the feeds service
 		ctx := context.Background()
-		feed, err := fetchFeed(ctx, server.URL)
+		feedsService := feeds.NewService(database.Queries{})
+		feed, err := feedsService.FetchFeed(ctx, server.URL)
 		
 		// Check for errors
 		if err != nil {
@@ -77,9 +80,10 @@ func TestFetchFeed(t *testing.T) {
 		}))
 		defer server.Close()
 		
-		// Fetch the feed
+		// Fetch the feed using the feeds service
 		ctx := context.Background()
-		_, err := fetchFeed(ctx, server.URL)
+		feedsService := feeds.NewService(database.Queries{})
+		_, err := feedsService.FetchFeed(ctx, server.URL)
 		
 		// Check for error
 		if err == nil {
