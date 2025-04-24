@@ -3,7 +3,6 @@ package tests
 import (
 	"testing"
 
-	"github.com/abahnj/rssagg/internal/middleware"
 )
 
 func TestMiddlewareLoggedIn(t *testing.T) {

@@ -25,11 +25,20 @@ func NewService(db database.Queries) *Service {
 	}
 }
 
-// CreatePost adds a new post to the database
-func (s *Service) CreatePost(ctx context.Context, feed database.Feed, item types.RSSItem) error {
+// CreatePostResult contains the result of creating a post
+type CreatePostResult struct {
+	Created bool
+	Err     error
+}
+
+// CreatePost adds a new post to the database and returns whether it was created or already existed
+func (s *Service) CreatePost(ctx context.Context, feed database.Feed, item types.RSSItem) CreatePostResult {
 	// Skip items with missing title or URL
 	if item.Title == "" || item.Link == "" {
-		return errors.New("post missing required title or URL")
+		return CreatePostResult{
+			Created: false,
+			Err:     errors.New("post missing required title or URL"),
+		}
 	}
 
 	// Parse the published date
@@ -62,14 +71,23 @@ func (s *Service) CreatePost(ctx context.Context, feed database.Feed, item types
 	// Insert post into database
 	_, err := s.DB.CreatePost(ctx, params)
 	if err != nil {
-		// If the error is a duplicate key error, just ignore it
+		// If the error is a duplicate key error, return false but no error
 		if strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
-			return nil
+			return CreatePostResult{
+				Created: false,
+				Err:     nil,
+			}
 		}
-		return fmt.Errorf("failed to create post: %w", err)
+		return CreatePostResult{
+			Created: false,
+			Err:     fmt.Errorf("failed to create post: %w", err),
+		}
 	}
 
-	return nil
+	return CreatePostResult{
+		Created: true,
+		Err:     nil,
+	}
 }
 
 // GetPostsForUser fetches posts for a specific user with a limit
