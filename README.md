@@ -55,11 +55,18 @@ Example configuration:
 
 ## Database Setup
 
-Run the following command to set up your PostgreSQL database:
+First, create a new PostgreSQL database:
 
 ```bash
-# Create the database
+# Option 1: Using createdb (Unix/macOS)
 createdb rssagg
+
+# Option 2: Using psql (works on all platforms)
+psql -c "CREATE DATABASE rssagg;"
+
+# Option 3: Using pgAdmin or another GUI tool
+# Right-click on "Databases" and select "Create" > "Database"
+# Enter "rssagg" as the database name
 ```
 
 ### Option 1: Manual SQL Execution

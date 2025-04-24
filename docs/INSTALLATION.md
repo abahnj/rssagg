@@ -107,12 +107,24 @@ move rssagg %GOPATH%\bin\  # Windows
 
 ### Creating the Database
 
+You can create the database using one of these methods:
+
 ```bash
-# For Linux/macOS
+# Method 1: Using createdb (Unix/macOS)
 createdb rssagg
 
-# For Windows using psql
-psql -U postgres -c "CREATE DATABASE rssagg"
+# Method 2: Using psql (all platforms)
+# Without credentials (if using peer authentication)
+psql -c "CREATE DATABASE rssagg;"
+
+# With credentials
+psql -U postgres -c "CREATE DATABASE rssagg;"
+
+# Method 3: Using pgAdmin or another GUI tool
+# 1. Open pgAdmin
+# 2. Connect to your PostgreSQL server
+# 3. Right-click on "Databases" and select "Create" > "Database"
+# 4. Enter "rssagg" as the database name and save
 ```
 
 ### Setting Up the Schema
