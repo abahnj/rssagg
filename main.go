@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 
 	"github.com/abahnj/rssagg/internal/cli"
 	"github.com/abahnj/rssagg/internal/config"
+	"github.com/abahnj/rssagg/internal/database"
+	"github.com/jackc/pgx/v5"
 )
 
 func main() {
@@ -16,9 +19,17 @@ func main() {
 		log.Fatalf("Failed to read config: %v", err)
 	}
 
+	conn, err := pgx.Connect(context.Background(), cfg.DBURL)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer conn.Close(context.Background())
+
 	// Create application state
 	state := &cli.State{
 		Config: &cfg,
+		Db:     database.New(conn),
 	}
 
 	// Set up commands

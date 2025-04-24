@@ -49,7 +49,7 @@ type GetConfigFilePathFunc func() (string, error)
 // It's exported to allow mocking in tests
 var GetConfigFilePath = func() (string, error) {
 	// For this project, we'll use the current directory instead of home
-	currentDir, err := os.Getwd()
+	currentDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("failed to get current directory: %w", err)
 	}
