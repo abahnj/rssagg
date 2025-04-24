@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-const configFileName = ".gatorconfig.json"
+const configFileName = "config.json"
 
 // Config represents the application configuration
 type Config struct {
@@ -48,8 +48,8 @@ type GetConfigFilePathFunc func() (string, error)
 // GetConfigFilePath returns the full path to the config file
 // It's exported to allow mocking in tests
 var GetConfigFilePath = func() (string, error) {
-	// For this project, we'll use the current directory instead of home
-	currentDir, err := os.UserHomeDir()
+	// Get the current working directory
+	currentDir, err := os.Getwd()
 	if err != nil {
 		return "", fmt.Errorf("failed to get current directory: %w", err)
 	}

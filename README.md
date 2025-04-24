@@ -41,16 +41,13 @@ go install github.com/abahnj/rssagg@latest
 
 ## Configuration
 
-The application requires a database connection. Create a `config.json` file in one of the following locations:
-
-- `./config.json` (current directory)
-- `$HOME/.config/rssagg/config.json`
+The application requires a database connection. Create a `config.json` file in the project root directory:
 
 Example configuration:
 
 ```json
 {
-  "database_url": "postgres://username:password@localhost:5432/rssagg"
+  "db_url": "postgres://username:password@localhost:5432/rssagg"
 }
 ```
 

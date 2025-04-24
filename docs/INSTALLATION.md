@@ -117,26 +117,18 @@ psql -U postgres -c "CREATE DATABASE rssagg"
 
 ## Configuration
 
-Create a configuration file in one of the following locations:
-
-- `./config.json` (current working directory)
-- `$HOME/.config/rssagg/config.json` (Linux/macOS)
-- `%USERPROFILE%\.config\rssagg\config.json` (Windows)
+Create a configuration file named `config.json` in the project root directory:
 
 ```bash
-# For Linux/macOS
-mkdir -p ~/.config/rssagg
-touch ~/.config/rssagg/config.json
-
-# For Windows
-mkdir %USERPROFILE%\.config\rssagg
+# Create the config file
+touch config.json
 ```
 
 Edit the configuration file to include your database connection:
 
 ```json
 {
-  "database_url": "postgres://yourusername:yourpassword@localhost:5432/rssagg"
+  "db_url": "postgres://yourusername:yourpassword@localhost:5432/rssagg"
 }
 ```
 

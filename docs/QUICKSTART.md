@@ -34,11 +34,11 @@ This guide will help you get started with RSS Aggregator CLI (rssagg) in minutes
 
 3. **Configure the Application**
 
-   Create a config file at `~/.config/rssagg/config.json`:
+   Create a config file named `config.json` in the project root directory:
 
    ```json
    {
-     "database_url": "postgres://username:password@localhost:5432/rssagg"
+     "db_url": "postgres://username:password@localhost:5432/rssagg"
    }
    ```
 
