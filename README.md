@@ -52,7 +52,6 @@ Example configuration:
 }
 ```
 
-Note: Both `config.json` and `.gatorconfig.json` formats are supported, but `config.json` in the project root is recommended.
 
 ## Database Setup
 

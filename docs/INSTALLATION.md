@@ -133,7 +133,6 @@ Edit the configuration file to include your database connection:
 }
 ```
 
-Note: The `.gatorconfig.json` format is also supported (copy from `.gatorconfig.json.example`), but `config.json` in the project root is the recommended approach.
 
 Replace `yourusername` and `yourpassword` with your PostgreSQL credentials.
 
