@@ -62,7 +62,26 @@ Run the following command to set up your PostgreSQL database:
 createdb rssagg
 ```
 
-You'll need to manually set up the database schema using the SQL files in the `sql/schema/` directory.
+### Option 1: Manual SQL Execution
+
+You can manually set up the database schema using the SQL files in the `sql/schema/` directory.
+
+### Option 2: Using Goose for Migrations (Recommended)
+
+[Goose](https://github.com/pressly/goose) is a database migration tool that helps manage schema changes. To use Goose:
+
+1. Install Goose:
+   ```bash
+   go install github.com/pressly/goose/v3/cmd/goose@latest
+   ```
+
+2. Run the migrations:
+   ```bash
+   cd /path/to/rssagg
+   goose -dir sql/schema postgres "postgres://username:password@localhost:5432/rssagg" up
+   ```
+
+   Replace `username` and `password` with your PostgreSQL credentials.
 
 ## Usage
 

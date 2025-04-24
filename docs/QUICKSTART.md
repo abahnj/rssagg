@@ -30,13 +30,25 @@ This guide will help you get started with RSS Aggregator CLI (rssagg) in minutes
    ```bash
    # Create the database
    createdb rssagg
-   
-   # Run schema migrations
+   ```
+
+   **Option A: Manual SQL Execution**
+   ```bash
+   # Run schema migrations manually
    psql -d rssagg -f sql/schema/001_users.sql
    psql -d rssagg -f sql/schema/002_feeds.sql
    psql -d rssagg -f sql/schema/003_feed_follows.sql
    psql -d rssagg -f sql/schema/004_feeds_last_fetched_at.sql
    psql -d rssagg -f sql/schema/005_posts.sql
+   ```
+
+   **Option B: Using Goose (Recommended)**
+   ```bash
+   # Install Goose if you don't have it
+   go install github.com/pressly/goose/v3/cmd/goose@latest
+   
+   # Run all migrations with Goose
+   goose -dir sql/schema postgres "postgres://username:password@localhost:5432/rssagg" up
    ```
 
 3. **Configure the Application**

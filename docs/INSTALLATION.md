@@ -117,7 +117,11 @@ psql -U postgres -c "CREATE DATABASE rssagg"
 
 ### Setting Up the Schema
 
-You need to manually run the SQL migration files to set up the database schema:
+You have two options for setting up the database schema:
+
+#### Option 1: Manual SQL Execution
+
+You can manually run the SQL migration files to set up the database schema:
 
 ```bash
 # For Linux/macOS
@@ -136,6 +140,37 @@ psql -U postgres -d rssagg -f sql/schema/005_posts.sql
 ```
 
 Run these commands in order, as each migration builds upon the previous one.
+
+#### Option 2: Using Goose for Migrations (Recommended)
+
+[Goose](https://github.com/pressly/goose) is a database migration tool that helps manage schema changes more effectively.
+
+1. Install Goose:
+
+```bash
+# Using Go install
+go install github.com/pressly/goose/v3/cmd/goose@latest
+
+# Or on macOS using Homebrew
+brew install goose
+```
+
+2. Run all migrations:
+
+```bash
+# Navigate to the project directory
+cd /path/to/rssagg
+
+# Run migrations
+goose -dir sql/schema postgres "postgres://username:password@localhost:5432/rssagg" up
+```
+
+Replace `username` and `password` with your PostgreSQL credentials.
+
+Goose has several advantages:
+- Automatically tracks migration versions
+- Allows rolling back migrations if needed
+- Ensures migrations run in the correct order
 
 ## Configuration
 
