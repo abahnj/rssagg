@@ -27,6 +27,17 @@ type FeedFollow struct {
 	UpdatedAt pgtype.Timestamp
 }
 
+type Post struct {
+	ID          uuid.UUID
+	CreatedAt   pgtype.Timestamp
+	UpdatedAt   pgtype.Timestamp
+	Title       string
+	Url         string
+	Description pgtype.Text
+	PublishedAt pgtype.Timestamp
+	FeedID      uuid.UUID
+}
+
 type User struct {
 	ID        uuid.UUID
 	Name      string

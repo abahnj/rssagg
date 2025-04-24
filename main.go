@@ -49,6 +49,7 @@ func main() {
 		fmt.Println("  follow <url> - Follow an existing feed")
 		fmt.Println("  unfollow <url> - Unfollow a feed")
 		fmt.Println("  following - List feeds you're following")
+		fmt.Println("  browse [limit] - View posts from feeds you follow (default limit: 10)")
 		fmt.Println("  agg <duration> - Aggregate and show feed content every <duration> (e.g. 30s, 1m)")
 		os.Exit(0)
 	}

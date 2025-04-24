@@ -24,4 +24,5 @@ func registerCommands(commands *cli.Commands) {
 	commands.Register("follow", middleware.MiddlewareLoggedIn(feeds.HandlerFollowFeed))
 	commands.Register("following", middleware.MiddlewareLoggedIn(feeds.HandlerListFollowing))
 	commands.Register("unfollow", middleware.MiddlewareLoggedIn(feeds.HandlerUnfollowFeed))
+	commands.Register("browse", middleware.MiddlewareLoggedIn(feeds.HandlerBrowse))
 }

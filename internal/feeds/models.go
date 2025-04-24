@@ -194,7 +194,7 @@ func (s *Service) MarkFeedFetched(ctx context.Context, feedID uuid.UUID) error {
 	return nil
 }
 
-// ScrapeFeeds fetches and processes a single feed
+// ScrapeFeed fetches and processes a single feed
 func (s *Service) ScrapeFeed(ctx context.Context) error {
 	// Get the next feed to fetch
 	feed, err := s.GetNextFeedToFetch(ctx)
@@ -212,13 +212,17 @@ func (s *Service) ScrapeFeed(ctx context.Context) error {
 	}
 	
 	// Process the feed items
-	fmt.Printf("Found %d posts in feed\n\n", len(rssFeed.Channel.Item))
+	fmt.Printf("Found %d posts in feed\n", len(rssFeed.Channel.Item))
 	
+	// Store each post in the database
 	for _, item := range rssFeed.Channel.Item {
-		fmt.Printf("- %s\n  %s\n  Published: %s\n\n", 
-			item.Title, 
-			item.Link, 
-			item.PubDate)
+		err := s.CreatePost(ctx, feed, item)
+		if err != nil {
+			// Just log errors but continue processing other items
+			fmt.Printf("Error saving post %s: %v\n", item.Title, err)
+		} else {
+			fmt.Printf("Saved: %s\n", item.Title)
+		}
 	}
 	
 	// Mark the feed as fetched
