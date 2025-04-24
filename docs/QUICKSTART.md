@@ -30,6 +30,13 @@ This guide will help you get started with RSS Aggregator CLI (rssagg) in minutes
    ```bash
    # Create the database
    createdb rssagg
+   
+   # Run schema migrations
+   psql -d rssagg -f sql/schema/001_users.sql
+   psql -d rssagg -f sql/schema/002_feeds.sql
+   psql -d rssagg -f sql/schema/003_feed_follows.sql
+   psql -d rssagg -f sql/schema/004_feeds_last_fetched_at.sql
+   psql -d rssagg -f sql/schema/005_posts.sql
    ```
 
 3. **Configure the Application**

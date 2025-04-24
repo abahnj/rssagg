@@ -115,6 +115,28 @@ createdb rssagg
 psql -U postgres -c "CREATE DATABASE rssagg"
 ```
 
+### Setting Up the Schema
+
+You need to manually run the SQL migration files to set up the database schema:
+
+```bash
+# For Linux/macOS
+psql -d rssagg -f sql/schema/001_users.sql
+psql -d rssagg -f sql/schema/002_feeds.sql
+psql -d rssagg -f sql/schema/003_feed_follows.sql
+psql -d rssagg -f sql/schema/004_feeds_last_fetched_at.sql
+psql -d rssagg -f sql/schema/005_posts.sql
+
+# For Windows
+psql -U postgres -d rssagg -f sql/schema/001_users.sql
+psql -U postgres -d rssagg -f sql/schema/002_feeds.sql
+psql -U postgres -d rssagg -f sql/schema/003_feed_follows.sql
+psql -U postgres -d rssagg -f sql/schema/004_feeds_last_fetched_at.sql
+psql -U postgres -d rssagg -f sql/schema/005_posts.sql
+```
+
+Run these commands in order, as each migration builds upon the previous one.
+
 ## Configuration
 
 Create a configuration file named `config.json` in the project root directory. You can copy from the example file:

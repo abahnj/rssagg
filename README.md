@@ -55,14 +55,14 @@ Example configuration:
 
 ## Database Setup
 
-Run the following commands to set up your PostgreSQL database:
+Run the following command to set up your PostgreSQL database:
 
 ```bash
 # Create the database
 createdb rssagg
-
-# The application will automatically run migrations on startup
 ```
+
+You'll need to manually set up the database schema using the SQL files in the `sql/schema/` directory.
 
 ## Usage
 
